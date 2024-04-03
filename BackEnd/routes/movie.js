@@ -13,4 +13,10 @@ router.get("/top-rate", movieController.getTopRateMovies);
 // get movies by genre route
 router.get("/discover", movieController.getMoviesByGenre);
 
+// trailer/teaser route
+router.post("/video", movieController.postTrailer);
+
+// search route
+router.post("/search", movieController.postSearch);
+
 module.exports = router;
