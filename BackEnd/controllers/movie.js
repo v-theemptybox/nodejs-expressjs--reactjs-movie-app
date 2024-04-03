@@ -1,6 +1,7 @@
 const Movies = require("../models/Movies");
 const Genre = require("../models/Genre");
 const Videos = require("../models/VideoList");
+const MediaType = require("../models/MediaType");
 
 const paging = require("../utils/paging");
 
@@ -131,6 +132,9 @@ exports.postTrailer = (req, res, next) => {
 exports.postSearch = (req, res, next) => {
   const movies = Movies.all();
   const keyword = req.body.keyword;
+  const req_media_type = req.body.req_media_type;
+  const req_language = req.body.req_language;
+  const req_year = req.body.req_year;
 
   const page = +req.query.page || 1;
 
@@ -139,11 +143,34 @@ exports.postSearch = (req, res, next) => {
   }
 
   // check title or overview has keyword
-  const filteredMovies = movies.filter(
+  let filteredMovies = movies.filter(
     (movie) =>
       movie.title?.toLowerCase().includes(keyword.toLowerCase()) ||
       movie.overview?.toLowerCase().includes(keyword.toLowerCase())
   );
+
+  // check if user passing media type data
+  if (req_media_type) {
+    filteredMovies = filteredMovies.filter(
+      (movie) => movie.media_type === req_media_type
+    );
+  }
+
+  // check if user passing language
+  if (req_language) {
+    filteredMovies = filteredMovies.filter(
+      (movie) => movie.original_language === req_language
+    );
+  }
+
+  // check if user pass release year
+  if (req_year) {
+    filteredMovies = filteredMovies.filter((movie) =>
+      movie.release_date
+        ? new Date(movie.release_date).getFullYear() === req_year
+        : new Date(movie.first_air_date).getFullYear() === req_year
+    );
+  }
 
   const results = paging(filteredMovies, PAGE_SIZE, page);
 
