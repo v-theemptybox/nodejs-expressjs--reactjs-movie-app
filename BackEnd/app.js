@@ -1,10 +1,12 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
 const auth = require("./middleware/auth");
 const movieRoutes = require("./routes/movie");
 
+app.use(cors());
 // body parser to json
 app.use(express.json());
 

@@ -1,15 +1,15 @@
-const API_KEY = '504b85f6fe0a10a9c7f35945e14e7ddf';
+const API_KEY = "504b85f6fe0a10a9c7f35945e14e7ddf";
 
+// change request to routes match with backend
 const requests = {
-	fetchTrending: `/trending/all/week?api_key=${API_KEY}&language=en-US`,
-	fetchNetflixOriginals: `/discover/tv?api_key=${API_KEY}&with_network=123`,
-	fetchTopRated: `/movie/top_rated?api_key=${API_KEY}&language=en-US`,
-	fetchActionMovies: `/discover/movie?api_key=${API_KEY}&with_genres=28`,
-	fetchComedyMovies: `/discover/movie?api_key=${API_KEY}&with_genres=35`,
-	fetchHorrorMovies: `/discover/movie?api_key=${API_KEY}&with_genres=27`,
-	fetchRomanceMovies: `/discover/movie?api_key=${API_KEY}&with_genres=10749`,
-	fetchDocumentaries: `/discover/movie?api_key=${API_KEY}&with_genres=99`,
-	fetchSearch: `/search/movie?api_key=${API_KEY}&language=en-US`,
+  fetchTrending: `/trending`,
+  fetchTopRated: `/top-rate`,
+  fetchActionMovies: `/discover?genre=28`,
+  fetchComedyMovies: `/discover?genre=35`,
+  fetchHorrorMovies: `/discover?genre=27`,
+  fetchRomanceMovies: `/discover?genre=10749`,
+  fetchDocumentaries: `/discover?genre=99`,
+  fetchSearch: `/search`,
 };
 
 export default requests;

@@ -32,6 +32,8 @@ exports.getTopRateMovies = (req, res, next) => {
   // descending sort movies by vote_average
   const sortedMovies = movies.sort((a, b) => b.vote_average - a.vote_average);
 
+  const results = paging(sortedMovies, PAGE_SIZE, page);
+
   res.status(200).json({
     results,
     page,
@@ -63,19 +65,21 @@ exports.getMoviesByGenre = (req, res, next) => {
     movie.genre_ids.includes(genre_id)
   );
 
+  const results = paging(filteredMovies, PAGE_SIZE, page);
+
   // get movie names from genre
   const foundedGenre = genre.find((genreData) => genreData.id === genre_id);
   const genre_name = foundedGenre.name;
 
   res.status(200).json({
-    results: filteredMovies,
+    results,
     page,
     total_pages: Math.ceil(filteredMovies.length / PAGE_SIZE),
     genre_name,
   });
 };
 
-// fetch top rate movies
+// post trailer or teaser of movie
 exports.postTrailer = (req, res, next) => {
   const videos = Videos.all();
   const filmId = req.body.film_id;

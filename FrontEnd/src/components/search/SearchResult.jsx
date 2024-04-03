@@ -1,48 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import axios from '../../utils/axios';
-import requests from '../../utils/requests';
+import axios from "../../utils/axios";
+import requests from "../../utils/requests";
 
-import './SearchResult.css';
+import "./SearchResult.css";
 
-const base_url = 'https://image.tmdb.org/t/p/original';
+const base_url = "https://image.tmdb.org/t/p/original";
 
-const SearchResult = ({query}) => {
-	const [movies, setMovies] = useState([]);
+const SearchResult = ({ query }) => {
+  const [movies, setMovies] = useState([]);
 
-	const url = `${requests.fetchSearch}&query=${query}`;
+  const url = `${requests.fetchSearch}`;
 
-	useEffect(() => {
-		async function fetchData() {
-			const request = await axios.get(url);
-			setMovies(request.data.results);
-			return request;
-		}
+  useEffect(() => {
+    async function fetchData() {
+      const request = await axios.post(
+        url,
+        { keyword: query },
+        {
+          headers: { Authorization: "8qlOkxz4wq" },
+        }
+      );
+      console.log(request.data.results);
 
-		if (query) {
-			fetchData();
-		} else {
-			setMovies([]);
-		}
-	}, [url, query]);
+      setMovies(request.data.results);
 
-	return(
-		<div className='row'>
-			<h2>Search Result</h2>
-			<div className='row_posters search-resul-container sc2'>
-				{movies.map((movie) => {
-					return (
-						<img
-							key={movie.id}
-							className={`row_poster row_posterLarge`}
-							src={`${base_url}${movie.poster_path}`}
-							alt={movie.name}
-						/>
-					);
-				})}
-			</div>
-		</div>
-	)
+      return request;
+    }
+
+    if (query) {
+      fetchData();
+    } else {
+      setMovies([]);
+    }
+  }, [url, query]);
+
+  return (
+    <div className="row">
+      <h2>Search Result</h2>
+      <div className="row_posters search-resul-container sc2">
+        {movies.map((movie) => {
+          return (
+            <img
+              key={movie.id}
+              className={`row_poster row_posterLarge`}
+              src={`${base_url}${movie.poster_path}`}
+              alt={movie.name}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default SearchResult;
