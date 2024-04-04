@@ -1,15 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import requests from "../../utils/requests";
+import axios from "../../utils/axios";
 import Nav from "../../components/browse/Nav";
 import SearchResult from "../../components/search/SearchResult";
 import "./Search.css";
 
 const Search = () => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState([]);
+  const [media, setMedia] = useState("");
+  const [language, setLanguage] = useState("");
+  const [releaseYear, setReleaseYear] = useState(0);
+  const [genreList, setGenreList] = useState([]);
+  const [genre, setGenre] = useState(0);
   const [searchInput, setSearchInput] = useState("");
 
+  useEffect(() => {
+    async function fetchData() {
+      const request = await axios.get(requests.fetchGenre, {
+        headers: { Authorization: "8qlOkxz4wq" },
+      });
+      setGenreList(request.data.results);
+      return request;
+    }
+    fetchData();
+  }, []);
+
+  const handleSelectGenre = (e) => {
+    setGenre(e.target.value);
+  };
+
+  const handleSelectMedia = (e) => {
+    setMedia(e.target.value);
+  };
+  const handleSelectLanguage = (e) => {
+    setLanguage(e.target.value);
+  };
+  const handleInputYear = (e) => {
+    setReleaseYear(e.target.value);
+  };
+
+  // console.log(media, language, releaseYear);
+
   const handleSearch = () => {
-    setQuery(searchInput);
+    setQuery([searchInput, media, language, releaseYear, genre]);
   };
 
   const resetSearch = () => {
@@ -51,20 +85,50 @@ const Search = () => {
               <div className="row third">
                 <div className="input-field">
                   <div className="result-count">
-                    <select name="media" id="media">
+                    <select
+                      name="genre"
+                      id="genre"
+                      onChange={handleSelectGenre}
+                    >
+                      <option value={0}>Genre</option>
+                      {!genreList && <span>Loading...</span>}
+                      {genreList &&
+                        genreList.map((genre) => (
+                          <option key={genre.id} value={genre.id}>
+                            {genre.name}
+                          </option>
+                        ))}
+                    </select>
+                    <select
+                      name="media"
+                      id="media"
+                      onChange={handleSelectMedia}
+                    >
                       <option value="">Media Type</option>
                       <option value="movie">Movie</option>
                       <option value="tv">TV</option>
                       <option value="person">Person</option>
                     </select>
-                    <select name="language" id="language">
+                    <select
+                      name="language"
+                      id="language"
+                      onChange={handleSelectLanguage}
+                    >
                       <option value="">Language</option>
                       <option value="en">English</option>
                       <option value="ja">Japanese</option>
                       <option value="ko">Korean</option>
                     </select>
-                    <label htmlFor="year">Year</label>
-                    <input type="number" value="1" id="year" name="year" />
+                    <label htmlFor="year">Year: </label>
+                    <input
+                      type="number"
+                      min={1900}
+                      value={releaseYear}
+                      id="year"
+                      name="year"
+                      onChange={handleInputYear}
+                      style={{ width: "100px", padding: "0" }}
+                    />
                   </div>
                   <div className="group-btn">
                     <button
@@ -88,7 +152,8 @@ const Search = () => {
           </div>
         </form>
       </div>
-      <SearchResult query={query} />
+
+      {query.length !== 0 && <SearchResult query={query} />}
     </div>
   );
 };

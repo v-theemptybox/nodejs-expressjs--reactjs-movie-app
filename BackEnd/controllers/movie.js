@@ -7,7 +7,7 @@ const paging = require("../utils/paging");
 
 const PAGE_SIZE = 20;
 
-// fetch trending movies
+// Fetch trending movies
 exports.getTrendingMovies = (req, res, next) => {
   const movies = Movies.all();
 
@@ -25,7 +25,7 @@ exports.getTrendingMovies = (req, res, next) => {
   });
 };
 
-// fetch top rate movies
+// Fetch top rate movies
 exports.getTopRateMovies = (req, res, next) => {
   const movies = Movies.all();
 
@@ -42,7 +42,7 @@ exports.getTopRateMovies = (req, res, next) => {
   });
 };
 
-// fetch movies by genre
+// Fetch movies by genre
 exports.getMoviesByGenre = (req, res, next) => {
   const movies = Movies.all();
   const genre = Genre.all();
@@ -80,7 +80,7 @@ exports.getMoviesByGenre = (req, res, next) => {
   });
 };
 
-// post trailer or teaser of movie
+// Post trailer or teaser of movie
 exports.postTrailer = (req, res, next) => {
   const videos = Videos.all();
   const filmId = req.body.film_id;
@@ -128,13 +128,22 @@ exports.postTrailer = (req, res, next) => {
   });
 };
 
-// search movies by keyword
+// Get genre list of movies
+exports.getGenre = (req, res, next) => {
+  const genre = Genre.all();
+  res.status(200).json({
+    results: genre,
+  });
+};
+
+// Search movies by keyword
 exports.postSearch = (req, res, next) => {
   const movies = Movies.all();
   const keyword = req.body.keyword;
   const req_media_type = req.body.req_media_type;
   const req_language = req.body.req_language;
   const req_year = req.body.req_year;
+  const req_genre = req.body.req_genre;
 
   const page = +req.query.page || 1;
 
@@ -148,6 +157,13 @@ exports.postSearch = (req, res, next) => {
       movie.title?.toLowerCase().includes(keyword.toLowerCase()) ||
       movie.overview?.toLowerCase().includes(keyword.toLowerCase())
   );
+
+  // check if user passing genre
+  if (req_genre 0) {
+    filteredMovies = movies.filter((movie) =>
+      movie.genre_ids.includes(req_genre)
+    );
+  }
 
   // check if user passing media type data
   if (req_media_type) {

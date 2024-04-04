@@ -19,4 +19,7 @@ router.post("/video", movieController.postTrailer);
 // search route
 router.post("/search", movieController.postSearch);
 
+// get genre route
+router.get("/genre", movieController.getGenre);
+
 module.exports = router;
