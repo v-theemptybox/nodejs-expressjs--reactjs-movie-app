@@ -159,7 +159,7 @@ exports.postSearch = (req, res, next) => {
   );
 
   // check if user passing genre
-  if (req_genre 0) {
+  if (req_genre) {
     filteredMovies = movies.filter((movie) =>
       movie.genre_ids.includes(req_genre)
     );
