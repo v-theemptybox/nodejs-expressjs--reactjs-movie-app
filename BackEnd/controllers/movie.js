@@ -160,7 +160,7 @@ exports.postSearch = (req, res, next) => {
 
   // check if user passing genre
   if (req_genre) {
-    filteredMovies = movies.filter((movie) =>
+    filteredMovies = filteredMovies.filter((movie) =>
       movie.genre_ids.includes(req_genre)
     );
   }
@@ -188,7 +188,7 @@ exports.postSearch = (req, res, next) => {
     );
   }
 
-  const results = paging(filteredMovies, PAGE_SIZE, page);
+  const results = paging(filteredMovies, PAGE_SIZE, 1);
 
   res.status(200).json({
     results,
